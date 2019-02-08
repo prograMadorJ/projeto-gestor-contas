@@ -1,0 +1,17 @@
+{
+  "name": "gestor-contas",
+  "version": "1.0.0",
+  "description": "gerenciador de contas para auxiliar no controle financeiro domiciliar.",
+  "main": "./bin/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "gestor",
+    "controle",
+    "financeiro",
+    "contas"
+  ],
+  "author": "jorge fernando brito",
+  "license": "MIT"
+}
