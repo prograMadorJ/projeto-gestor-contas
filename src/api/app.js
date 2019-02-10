@@ -1,8 +1,6 @@
 const app = require('express')()
 const bodyParser = require('body-parser')
-const DB = require('./data/config')
-
-DB.connect('localhost','27017','contas')
+require('./data/config').connect('contas')
 
 app.enabled('trust proxy')
 
