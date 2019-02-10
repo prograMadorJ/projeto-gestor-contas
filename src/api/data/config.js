@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 
 module.exports = {
 
-    connect(hostName, port, dbName) {
+    connect(dbName, hostName = 'localhost', port = 27017) {
         databaseName = dbName
         stringConnection = 'mongodb://' + hostName + ':' + port + '/' + databaseName
         mongoose.connect(stringConnection, {
@@ -11,7 +11,7 @@ module.exports = {
         }, (err) => {
             if (err) console.log(err)
         })
-        
+
         // CONNECTION EVENTS
         // When successfully connected
         mongoose.connection.on('connected', () => {
