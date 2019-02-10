@@ -3,7 +3,8 @@ module.exports = (
     messages,
     validateRegister,
     validateUpdate,
-    validateDelete
+    validateDelete,
+    validateGet
 ) => {
     return {
         /**
@@ -51,6 +52,43 @@ module.exports = (
                     res.send(docs)
                 })
 
+        },
+        /**
+         * Get one model
+         * 
+         * @param {Object} getFilter 
+         * @param {Object} selectFilter 
+         * @param {Function} callback 
+         */
+        _get(getFilter, selectFilter, callback) {
+            
+            Model
+                .findOne(getFilter)
+                .select(selectFilter)
+                .exec((err, doc) => {
+
+                    if (err || doc == null) new Error(err)
+
+                    callback(doc)
+                })
+
+        },
+        /**
+         * Get one model
+         * 
+         * @param {Request} req 
+         * @param {Response} res 
+         * @param {Callback} next 
+         */
+        get(req, res, next) {
+
+            callback = (getFilter) => {
+                this._get(getFilter, {
+                    _id: 0
+                }, doc => res.send(doc))
+            }
+
+            validateGet(req, callback)
         },
         /**
          * Update a model
@@ -105,7 +143,7 @@ module.exports = (
                     })
             }
 
-            validateDelete(req,callback)
+            validateDelete(req, callback)
         }
     }
 }
