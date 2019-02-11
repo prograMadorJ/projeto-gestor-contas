@@ -15,10 +15,15 @@ const validateDelete = (req, callback) => {
     callback(req.body)
 }
 
+const validateGet = (req,callback) => {
+    callback(req.query)
+}
+
 module.exports = Base(
     Consumer,
     messages,
     validateRegister,
     validateUpdate,
-    validateDelete
+    validateDelete,
+    validateGet
 )

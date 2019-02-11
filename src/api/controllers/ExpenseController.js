@@ -22,7 +22,11 @@ const getCategory = (name, callback) => {
         name
     }, {
         _id: 1
-    }, category => callback(category))
+    }, category => callback(category[0]))
+}
+
+const validateGet = (req, callback) => {
+    callback(req.query)
 }
 
 module.exports = {
@@ -89,6 +93,56 @@ module.exports = {
 
                 res.send(docs)
             })
+    },
+    /**
+     * Get one model
+     * 
+     * @param {Request} req 
+     * @param {Response} res 
+     * @param {Callback} next 
+     */
+    get(req, res, next) {
+
+        getExpense = (getFilter) => {
+            Expense
+                .find(getFilter)
+                .select({
+                    _id: 0
+                })
+                .populate({
+                    path: 'category',
+                    select: {
+                        _id: 0,
+                        __v: 0
+                    }
+                })
+                .exec((err, doc) => {
+
+                    if (err || doc == null) return next(new Error(err))
+
+                    res.send(doc)
+                })
+        }
+
+        callback = (getFilter) => {
+
+            if ('category' in getFilter) {
+                getCategory(
+                    getFilter.category, category => {
+
+                        if (null == category) return next(new Error('category is null'))
+
+                        getFilter.category = category._id
+
+                        getExpense(getFilter)
+                    })
+            } else {
+                getExpense(getFilter)
+            }
+
+        }
+
+        validateGet(req, callback)
     },
     /**
      * Update a model

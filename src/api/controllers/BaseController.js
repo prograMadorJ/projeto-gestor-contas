@@ -61,9 +61,9 @@ module.exports = (
          * @param {Function} callback 
          */
         _get(getFilter, selectFilter, callback) {
-            
+
             Model
-                .findOne(getFilter)
+                .find(getFilter)
                 .select(selectFilter)
                 .exec((err, doc) => {
 
@@ -83,9 +83,18 @@ module.exports = (
         get(req, res, next) {
 
             callback = (getFilter) => {
-                this._get(getFilter, {
-                    _id: 0
-                }, doc => res.send(doc))
+
+                Model
+                    .find(getFilter)
+                    .select({
+                        _id: 0
+                    })
+                    .exec((err, doc) => {
+
+                        if (err || doc == null) return next(new Error(err))
+
+                        res.send(doc)
+                    })
             }
 
             validateGet(req, callback)
