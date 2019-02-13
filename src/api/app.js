@@ -1,5 +1,7 @@
 const app = require('express')()
 const bodyParser = require('body-parser')
+const morgan = require('morgan')
+const helmet = require('helmet')
 require('./data/config').connect('contas')
 
 app.enabled('trust proxy')
@@ -19,6 +21,8 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
     extended: true
 }))
+app.use(morgan('combined'))
+app.use(helmet())
 
 require('./routes/Routes')(app)
 
