@@ -28,4 +28,4 @@ module.exports = Base(
     validateGet
 )
 
-module.exports.api = api
+module.exports.api = Base.api
