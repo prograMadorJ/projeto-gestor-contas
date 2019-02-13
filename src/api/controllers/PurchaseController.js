@@ -4,7 +4,6 @@ const Consumer = require('../models/Consumer')
 const messages = require('../messages/PurchaseMessages')
 const Base = require('./BaseController')
 
-
 const validateRegister = (req, callback) => {
     callback(req.body)
 }
@@ -17,118 +16,80 @@ const validateDelete = (req, callback) => {
     callback(req.body)
 }
 
-const getCategory = (name, callback) => {
-
-    Base(Category)._get({
-        name
-    }, {
-        _id: 1
-    }, category => callback(category[0]))
-}
-
-const getConsumer = (name, callback) => {
-
-    Base(Consumer)._get({
-        name
-    }, {
-        _id: 1
-    }, consumer => callback(consumer[0]))
-}
-
 const validateGet = (req, callback) => {
     callback(req.query)
 }
 
-module.exports = {
+const api = (Model) => {
+
     /**
-     * Register a model
+     * Get a category
      * 
-     * @param {Request} req 
-     * @param {Response} res 
-     * @param {Callback} next 
+     * @param {String} name 
+     * @param {Function} callback 
      */
-    register(req, res, next) {
+    const getCategory = (name, callback) => {
 
-        callback = (validate) => {
+        Base.api(Category).get({
+            name
+        }, {
+            _id: 1
+        }, (err, category) => callback(err, category[0]))
+    }
 
-            const registerFields = validate
+    /**
+     * Get a consumer
+     * 
+     * @param {String} name 
+     * @param {Function} callback 
+     */
+    const getConsumer = (name, callback) => {
+
+        Base.api(Consumer).get({
+            name
+        }, {
+            _id: 1
+        }, (err, consumer) => callback(err, consumer[0]))
+    }
+
+    return {
+        /**
+         * Register a model
+         * 
+         * @param {Object} registerFields 
+         * @param {Function} callback 
+         */
+        register(registerFields, callback) {
 
             callbackRegister = (category, consumer) => {
 
                 registerFields.category = category._id
                 registerFields.consumer = consumer._id
 
-                Purchase
-                    .create(registerFields, (err) => {
-
-                        if (err) return next(new Error(err))
-
-                        res.status(201).send(messages.REGISTERED_SUCCESS)
-                    })
+                Purchase.create(registerFields, err => callback(err))
             }
 
-            getConsumer(validate.consumer, consumer => {
+            getConsumer(registerFields.consumer, (err, consumer) => {
 
-                if (consumer == null) return next(new Error('consumer is null'))
+                if (err || consumer == null) return callback('consumer is null')
 
-                getCategory(validate.category, category => {
+                getCategory(registerFields.category, (err, category) => {
 
-                    if (category == null) return next(new Error('category is null'))
+                    if (err || category == null) return callback('category is null')
 
                     callbackRegister(category, consumer)
                 })
             })
-        }
-
-
-        validateRegister(req, callback)
-    },
-    /**
-     * Fetch a collection of model
-     * 
-     * @param {Request} req 
-     * @param {Response} res 
-     * @param {Callback} next 
-     */
-    fetch(req, res, next) {
-        Purchase
-            .find()
-            .select({
-                _id: 0
-            })
-            .populate({
-                path: 'category',
-                select: {
-                    _id: 0,
-                    __v: 0
-                }
-            })
-            .populate({
-                path: 'consumer',
-                select: {
-                    _id: 0,
-                    __v: 0
-                }
-            })
-            .exec((err, docs) => {
-
-                if (err || docs == null) return next(new Error(err))
-
-                res.send(docs)
-            })
-    },
-    /**
-     * Get one model
-     * 
-     * @param {Request} req 
-     * @param {Response} res 
-     * @param {Callback} next 
-     */
-    get(req, res, next) {
-
-        getPurchase = (getFilter) => {
+        },
+        /**
+         * 
+         * Fetch a collection of model
+         * 
+         * @param {Function} callback 
+         */
+        fetch(callback) {
             Purchase
-                .find(getFilter)
+                .find()
                 .select({
                     _id: 0
                 })
@@ -146,41 +107,76 @@ module.exports = {
                         __v: 0
                     }
                 })
-                .exec((err, doc) => {
+                .exec((err, docs) => {
 
-                    if (err || doc == null) return next(new Error(err))
+                    if (err) new Error(err)
 
-                    res.send(doc)
+                    callback(err, docs)
                 })
-        }
+        },
+        /**
+         * 
+         * Get a model
+         * 
+         * @param {Object} getFilter 
+         * @param {Function} callback 
+         */
+        get(getFilter, callback) {
 
-        callback = (getFilter) => {
+            getPurchase = (getFilter) => {
 
-            _getCategory = (getFilterCategory, callback) => {
+                Purchase
+                    .find(getFilter)
+                    .select({
+                        _id: 0
+                    })
+                    .populate({
+                        path: 'category',
+                        select: {
+                            _id: 0,
+                            __v: 0
+                        }
+                    })
+                    .populate({
+                        path: 'consumer',
+                        select: {
+                            _id: 0,
+                            __v: 0
+                        }
+                    })
+                    .exec((err, doc) => {
 
-                getCategory(getFilterCategory.category, category => {
+                        if (err) new Error(err)
 
-                    if (null == category) return next(new Error('category is null'))
+                        callback(err, doc)
+                    })
+            }
+
+            _getCategory = (getFilterCategory, callbackCategory) => {
+
+                getCategory(getFilterCategory.category, (err, category) => {
+
+                    if (err || null == category) return callback('category is null')
 
                     getFilterCategory.category = category._id
 
-                    callback(getFilterCategory)
+                    callbackCategory(getFilterCategory)
                 })
             }
 
-            _getConsumer = (getFilterConsumer, callback) => {
+            _getConsumer = (getFilterConsumer, callbackConsumer) => {
 
-                getConsumer(getFilterConsumer.consumer, consumer => {
+                getConsumer(getFilterConsumer.consumer, (err, consumer) => {
 
-                    if (null == consumer) return next(new Error('consumer is null'))
+                    if (err || null == consumer) return callback('consumer is null')
 
                     getFilterConsumer.consumer = consumer._id
 
-                    callback(getFilterConsumer)
+                    callbackConsumer(getFilterConsumer)
                 })
             }
 
-            if ('consumer', 'category' in getFilter) {
+            if ('consumer' in getFilter && 'category' in getFilter) {
 
                 _getCategory(getFilter, getFilter => {
 
@@ -209,23 +205,15 @@ module.exports = {
 
                 getPurchase(getFilter)
             }
-        }
-
-        validateGet(req, callback)
-    },
-    /**
-     * Update a model
-     * 
-     * @param {Request} req 
-     * @param {Response} res 
-     * @param {Callback} next 
-     */
-    update(req, res, next) {
-
-        callback = (validateOld, validateNew) => {
-
-            const updateFilter = validateOld
-            const updateFields = validateNew
+        },
+        /**
+         * Update a model
+         * 
+         * @param {Object} updateFilter 
+         * @param {Object} updateFields 
+         * @param {Function} callback 
+         */
+        update(updateFilter, updateFields, callback) {
 
             callbackUpdate = (categoryOld, categoryNew, consumerOld, consumerNew) => {
 
@@ -241,20 +229,22 @@ module.exports = {
                         new: true
                     }, (err, doc) => {
 
-                        if (err || doc == null) return next(new Error(err))
+                        if (err) new Error(err)
 
-                        res.status(202).send(messages.UPDATED_SUCCESS)
+                        callback(err, doc)
 
                     })
             }
 
             getCategoryOldAndNew = (validateOld, validateNew, callback) => {
 
-                getCategory(validateOld.category, categoryOld => {
+                getCategory(validateOld.category, (err, categoryOld) => {
 
-                    getCategory(validateNew.category, categoryNew => {
+                    if (err || null == categoryOld) return callback('category old is null')
 
-                        if (null == categoryOld || null == categoryNew) return next(new Error('category is null'))
+                    getCategory(validateNew.category, (err, categoryNew) => {
+
+                        if (err || null == categoryNew) return callback('category new is null')
 
                         callback(categoryOld, categoryNew)
                     })
@@ -263,21 +253,126 @@ module.exports = {
 
             getConsumerOldAndNew = (validateOld, validateNew, callback) => {
 
-                getConsumer(validateOld.consumer, consumerOld => {
+                getConsumer(validateOld.consumer, (err, consumerOld) => {
 
-                    getConsumer(validateNew.consumer, consumerNew => {
+                    if (err || null == consumerOld) return callback('consumer old is null')
 
-                        if (null == consumerOld || null == consumerNew) return next(new Error('consumer is null'))
+                    getConsumer(validateNew.consumer, (err, consumerNew) => {
+
+                        if (err || null == consumerNew) return callback('consumer new is null')
 
                         callback(consumerOld, consumerNew)
                     })
                 })
             }
 
-            getCategoryOldAndNew(validateOld, validateNew, (categoryOld, categoryNew) => {
-                getConsumerOldAndNew(validateOld, validateNew, (consumerOld, consumerNew) => {
+            getCategoryOldAndNew(updateFilter, updateFields, (categoryOld, categoryNew) => {
+                getConsumerOldAndNew(updateFilter, updateFields, (consumerOld, consumerNew) => {
                     callbackUpdate(categoryOld, categoryNew, consumerOld, consumerNew)
                 })
+            })
+        },
+        /**
+         * Delete a model
+         * 
+         * @param {Object} deleteFilter 
+         * @param {Function} callback 
+         */
+        delete(deleteFilter, callback) {
+
+            callbackDelete = (category, consumer) => {
+
+                deleteFilter.category = category._id
+                deleteFilter.consumer = consumer._id
+
+                Purchase
+                    .findOneAndDelete(deleteFilter, (err, doc) => {
+
+                        if (err) new Error(err)
+
+                        callback(err, doc)
+
+                    })
+            }
+
+            getConsumer(deleteFilter.consumer, (err, consumer) => {
+
+                if (err || consumer == null) return callback('consumer is null')
+
+                getCategory(deleteFilter.category, (err, category) => {
+
+                    if (err || null == category) return callback('category is null')
+
+                    callbackDelete(category,consumer)
+                })
+            })
+        }
+    }
+}
+
+module.exports = {
+    /**
+     * Register a model
+     * 
+     * @param {Request} req 
+     * @param {Response} res 
+     * @param {Callback} next 
+     */
+    register(req, res, next) {
+
+        callback = (registerFields) => {
+            api(Purchase).register(registerFields, err => {
+                if (err) return next(new Error(err))
+                res.status(201).send(messages.REGISTERED_SUCCESS)
+            })
+        }
+
+        validateRegister(req, callback)
+    },
+    /**
+     * Fetch a collection of model
+     * 
+     * @param {Request} req 
+     * @param {Response} res 
+     * @param {Callback} next 
+     */
+    fetch(req, res, next) {
+        api(Purchase).fetch((err, docs) => {
+            if (err) return next(new Error(err))
+            res.send(docs)
+        })
+    },
+    /**
+     * Get one model
+     * 
+     * @param {Request} req 
+     * @param {Response} res 
+     * @param {Callback} next 
+     */
+    get(req, res, next) {
+
+        callback = (getFilter) => {
+            api(Purchase).get(getFilter, (err, doc) => {
+                if (err) return next(new Error(err))
+                res.send(doc)
+            })
+        }
+
+        validateGet(req, callback)
+    },
+    /**
+     * Update a model
+     * 
+     * @param {Request} req 
+     * @param {Response} res 
+     * @param {Callback} next 
+     */
+    update(req, res, next) {
+
+        callback = (validateOld, validateNew) => {
+            api(Purchase).update(validateOld, validateNew, (err, doc) => {
+                if (err || doc == null) return next(new Error(err))
+                res.status(202).send(messages.UPDATED_SUCCESS)
             })
         }
 
@@ -293,37 +388,13 @@ module.exports = {
     delete(req, res, next) {
 
         callback = (validateDelete) => {
-
-            const deleteFilter = validateDelete
-
-            callbackDelete = (category, consumer) => {
-
-                deleteFilter.category = category._id
-                deleteFilter.consumer = consumer._id
-
-                Purchase
-                    .findOneAndDelete(deleteFilter, (err, doc) => {
-
-                        if (err || doc == null) return next(new Error(err))
-
-                        res.status(202).send(messages.DELETED_SUCCESS)
-
-                    })
-            }
-
-            getConsumer(validateDelete.consumer, consumer => {
-
-                if (consumer == null) return next(new Error('consumer is null'))
-
-                getCategory(validateDelete.category, category => {
-
-                    if (category == null) return next(new Error('category is null'))
-
-                    callbackDelete(category, consumer)
-                })
+            api(Purchase).delete(validateDelete, (err, doc) => {
+                if (err || doc == null) return next(new Error(err))
+                res.status(202).send(messages.DELETED_SUCCESS)
             })
         }
 
         validateDelete(req, callback)
     }
 }
+module.exports.api = api

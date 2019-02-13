@@ -27,3 +27,5 @@ module.exports = Base(
     validateDelete,
     validateGet
 )
+
+module.exports.api = api
