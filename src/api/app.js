@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const helmet = require('helmet')
 require('./data/config').connect('contas')
+require('../frontend/app')(app)
 
 app.enabled('trust proxy')
 
