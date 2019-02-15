@@ -2,7 +2,7 @@ const router = require('express').Router()
 
 module.exports = (routeController) => {
 
-    routeController.map(item => router.get(item[0], item[1]))
+    routeController.map(item => router[item[0].toLowerCase()](item[1], item[2]))
 
     return router
 }

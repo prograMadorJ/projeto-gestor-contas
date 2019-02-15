@@ -7,6 +7,7 @@ module.exports = {
         es6Render(pathView('/'), {
             locals: params,
             partials: {
+                header: pathView('/header'),
                 main: pathView(view)
             }
         }, (err, content) => {
