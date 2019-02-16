@@ -14,12 +14,11 @@ module.exports = {
             (err) ? next(new Error(err)): response.send(content)
         })
     },
-    render(views, params, response, next) {
-        es6Render(pathView('/'), {
-            locals: params,
-            partials: views
+    render(entryView, params, callback, next) {
+        es6Render(pathView(entryView), {
+            locals: params
         }, (err, content) => {
-            (err) ? next(new Error(err)): response.send(content)
+            (err) ? next(new Error(err)): callback(content)
         })
     }
 }
