@@ -4,9 +4,10 @@ const publicPath = path.resolve(__dirname, '../../public')
 const scripty = path => './src/frontend/views'.concat(path)
 
 const entries = {
-    style: ['./src/frontend/views/assets/build-css.js', './dump/[name].js'],
-    index: [scripty('/scripts.js'), './js/scripts.js'],
-    header: [scripty('/header/scripts.js'), './header/scripts.js']
+    style: ['/assets/build-css.js', './dump/[name].js'],
+    index: ['/scripts.js', './js/scripts.js'],
+    header: ['/header/scripts.js', './header/scripts.js'],
+    register_category: ['/cadastrar/categoria/scripts.js', './cadastrar/categoria/scripts.js']
 
 }
 
@@ -20,7 +21,7 @@ const output = {
 const entry = {}
 
 Object.keys(entries).map(e =>
-    entry[e] = entries[e][0]
+    entry[e] = scripty(entries[e][0])
 )
 
 module.exports = {

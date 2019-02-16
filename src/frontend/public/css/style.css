@@ -2,8 +2,28 @@ body {
   background-color: rgba(255, 255, 255, 0.88);
   background-blend-mode: overlay;
   background-repeat: no-repeat;
-  background-position-y: -10%;
-  background-position-x: 60%; }
+  background-position-y: -16%;
+  background-position-x: 70%; }
+
+header {
+  z-index: 9999;
+  position: relative; }
+
+@media (min-width: 993px) {
+  main {
+    margin: 0 0 0 300px; }
+  nav .brand-logo.center {
+    left: 62%; } }
+
+table {
+  padding: 1rem; }
+
+table.striped > tbody > tr:nth-child(odd) {
+  background-color: rgba(242, 242, 242, 0.95); }
+
+.wrapper {
+  padding: 1rem !important;
+  margin: 1rem !important; }
 
 #sidenav-logo {
   display: flex;
@@ -14,4 +34,19 @@ body {
 
 .sidenav li.active {
   background-color: rgba(255, 255, 255, 0.5); }
+
+.drag-target {
+  width: 15%; }
+
+#opc-menu > li {
+  position: relative; }
+
+#subopc-add {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 0 1rem;
+  background-color: #ffddc4; }
+  #subopc-add i {
+    margin: 0 1rem; }
 

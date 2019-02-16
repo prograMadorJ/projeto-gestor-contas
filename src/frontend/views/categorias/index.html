@@ -1,0 +1,25 @@
+<div class="row">
+    ${
+    (err)?`<h6 class="center">Erro ao obter categorias, tente novamente</h6>`:
+    (categories==null)?`<h6 class="center">Nenhuma categoria cadastrada</h6>`:
+    `
+    <div class="card wrapper">
+        <table class="striped">
+            <thead>
+                <th class="center">#</th>
+                <th>Nome</th>
+            </thead>
+            `+
+            categories.map((category,i) =>
+            `
+            <tr>
+                <td class="center">${i+1}</td>
+                <td>${category.name}</td>
+            </tr>`
+            ).join('')
+            +`
+        </table>
+    </div>
+    `
+    }
+</div>
