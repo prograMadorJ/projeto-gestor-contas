@@ -5,17 +5,17 @@ const {
 } = require('./BaseController')
 
 const orderBy = require('sort-by')
+const groupBy = require('group-by')
 
 const categoryController = require('../../api/controllers/CategoryController')
+const expenseController = require('../../api/controllers/ExpenseController')
 
 module.exports = {
     /**
      * UI Home
      * 
      * @param {Request} req 
-     * @param {Response} res             -webkit-transform: translateX(-50%);
-        transform: translateX(-50%);    -webkit-transform: translateX(-50%);
-        transform: translateX(-50%);
+     * @param {Response} res  
      * @param {Callback} next 
      */
     UIHome(req, res, next) {
@@ -41,6 +41,29 @@ module.exports = {
                 title: 'Categorias',
                 activeOpc: 5,
                 categories,
+                err
+            }, res, next)
+        })
+    },
+    /**
+     * UI Expenses
+     * 
+     * @param {Request} req 
+     * @param {Response} res 
+     * @param {Callback} next 
+     */
+    UIExpenses(req, res, next) {
+
+        expenseController.api.fetch((err, expenses) => {
+
+            expenses = expenses.sort(orderBy('-expiry'))
+
+            expenses = groupBy(expenses,'category.name')
+
+            view('/despesas', {
+                title: 'Despesas',
+                activeOpc: 4,
+                expenses,
                 err
             }, res, next)
         })

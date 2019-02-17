@@ -50,3 +50,12 @@ table.striped > tbody > tr:nth-child(odd) {
   #subopc-add i {
     margin: 0 1rem; }
 
+hr {
+  border: solid 1px grey;
+  border-bottom: transparent; }
+
+.border-selected {
+  border-bottom: 1px solid #4CAF50 !important;
+  -webkit-box-shadow: 0 1px 0 0 #4CAF50 !important;
+  box-shadow: 0 1px 0 0 #4CAF50 !important; }
+

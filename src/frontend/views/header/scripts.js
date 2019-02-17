@@ -13,7 +13,7 @@ $(document).ready(function () {
 
   $('#opc-menu li').each((i, opc) => {
     $(opc).on('click', event => {
-      $('#subopc-add').addClass('hide')
+      $('a#subopc-add').addClass('hide')
     })
   })
 });

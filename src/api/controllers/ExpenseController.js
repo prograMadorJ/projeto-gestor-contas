@@ -289,4 +289,4 @@ module.exports = {
     }
 }
 
-module.exports.api = api
+module.exports.api = api(Expense)

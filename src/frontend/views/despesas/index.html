@@ -1,0 +1,38 @@
+<template>${total=0}</template>
+<div class="row">
+    ${
+    (err)?`<h6 class="center">Erro ao obter despesas, tente novamente</h6>`:
+    (expenses==null)?`<h6 class="center">Nenhuma despesa cadastrada</h6>`:
+    Object.keys(expenses).map(category=>
+    `<div class="card wrapper center">
+        <h5 class="center">${category}</h5>
+        <hr>
+        <table class="striped">
+            <thead>
+                <th>Vencimento</th>
+                <th>Descrição</th>
+                <th>Valor</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        ${
+                        expenses[category][0].expiry.toISOString().split('-')[2].split('T')[0]+'/'+
+                        expenses[category][0].expiry.toISOString().split('-')[1]+'/'+
+                        expenses[category][0].expiry.toISOString().split('-')[0]
+                        }
+                    </td>
+                    <td>${expenses[category][0].description.toUpperCase()}</td>
+                    <td>R$ ${expenses[category][0].value.toFixed(2).replace('.',',')}</td>
+                </tr>
+            </tbody>
+        </table>
+        <template>${total+=Number(expenses[category][0].value)}</template>
+    </div>`
+    ).join('')
+    +`<div class="card wrapper center">
+        <h5 class="row"><i>Total</i></h5>
+        <h3>R$ ${total.toFixed(2).replace('.',',')}</h3>
+    </div>`
+    }
+</div>
