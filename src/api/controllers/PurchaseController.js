@@ -5,7 +5,9 @@ const messages = require('../messages/PurchaseMessages')
 const Base = require('./BaseController')
 
 const validateRegister = (req, callback) => {
-    callback(req.body)
+    registerFields = req.body
+    registerFields.value = req.body.value.replace(',','.')
+    callback(registerFields)
 }
 
 const validateUpdate = (req, callback) => {
@@ -397,4 +399,4 @@ module.exports = {
         validateDelete(req, callback)
     }
 }
-module.exports.api = api
+module.exports.api = api(Purchase)
