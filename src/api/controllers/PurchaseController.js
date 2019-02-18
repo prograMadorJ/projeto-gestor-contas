@@ -4,6 +4,8 @@ const Consumer = require('../models/Consumer')
 const messages = require('../messages/PurchaseMessages')
 const Base = require('./BaseController')
 
+//TODO: implementation validators
+
 const validateRegister = (req, callback) => {
     registerFields = req.body
     registerFields.value = req.body.value.replace(',','.')

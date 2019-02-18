@@ -2,6 +2,7 @@ const Consumer = require('../models/Consumer')
 const messages = require('../messages/ConsumerMessages')
 const Base = require('./BaseController')
 
+//TODO: implementation validators
 
 const validateRegister = (req, callback) => {
     callback(req.body)

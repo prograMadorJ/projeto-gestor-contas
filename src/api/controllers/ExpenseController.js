@@ -3,6 +3,7 @@ const Category = require('../models/Category')
 const messages = require('../messages/ExpenseMessages')
 const Base = require('./BaseController')
 
+//TODO: implementation validators
 
 const validateRegister = (req, callback) => {
     callback(req.body)
