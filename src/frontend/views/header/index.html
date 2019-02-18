@@ -28,17 +28,27 @@
                     Home
                 </a>
             </li>
-            <li id="opc-users" data-opc="2">
+            <!-- <li id="opc-users" data-opc="2">
                 <a id="opc-link" class="collapsible-header" href="/usuarios">
                     <i class="material-icons grey-text text-darken-4">person</i>
                     Usuários
                 </a>
-            </li>
+            </li> -->
             <li id="opc-purchases" data-opc="3">
-                <a id="opc-link" class="collapsible-header" href="/compras">
+                <a id="opc-link" class="collapsible-header">
                     <i class="material-icons grey-text text-darken-4">shopping_cart</i>
                     Compras
                 </a>
+                <a id="subopc-add" class="hide" href="/cadastrar/compra"><i class="material-icons green-text">add_circle</i>adicionar</a>
+                <ul class="collapsible-body">
+                    <li><a href="/compras">TODOS</a></li>
+                    ${
+                        consumers.map(consumer =>
+                            `<li><a href="/compras?consumer=${consumer.name}">${consumer.name.toUpperCase()}</a></li>`
+                        ).join('')
+                    }
+                    
+                </ul>
             </li>
             <li id="opc-expenses" data-opc="4">
                 <a id="opc-link" class="collapsible-header" href="/despesas">

@@ -1,0 +1,78 @@
+<!-- <template>${total=0,subtotal=0,totalPayment=0}</template> -->
+${
+(err)?`<h6 class="center">Erro ao obter compras, tente novamente</h6>`:
+(purchases==null)?`<h6 class="center">Nenhuma compra cadastrada</h6>`:
+`<h5 class="wrapper">CONSUMIDOR: <b>${selectConsumer.toUpperCase()}</b></h5>`+
+`<ul class="collapsible">`+
+    payments.map(payment =>
+    `<li id="purchases" class="card center blue-grey lighten-3">
+        <div class="collapsible-header">
+            <h5 class="wrapper orange lighten-1">
+                <b>${payment.toUpperCase()}</b>
+            </h5>
+        </div>
+        <div class="collapsible-body">
+            `+
+            Object.keys(purchases).map(category =>
+            ((purchase=purchases[category][payment])!==undefined)?
+            `<div id="categories" class="center blue-grey lighten-3">
+                <!-- <template>${subtotal=0}</template> -->
+                <ul class="card collapsible">
+                    <li>
+                        <div class="collapsible-header center grey lighten-2">
+                            <h5 class="row">${category.toUpperCase()}</h5>
+                        </div>
+                        <div class="collapsible-body">
+                            <table class="striped">
+                                <thead>
+                                    <th>Data</th>
+                                    <th>Descrição</th>
+                                    <th>Valor</th>
+                                </thead>
+                                <tbody>`+
+                                    purchase.map(p =>
+                                    `<tr>
+                                        <td>${
+                                            p.datetime.toISOString().split('-')[2].split('T')[0]+'/'+
+                                            p.datetime.toISOString().split('-')[1]+'/'+
+                                            p.datetime.toISOString().split('-')[0]
+                                            }
+                                        </td>
+                                        <td>${p.description.toUpperCase()}</td>
+                                        <td>R$ ${p.value.toFixed(2).replace('.',',')}</td>
+                                        <!-- <template>${subtotal+=p.value}</template> -->
+                                    </tr>
+                                    `
+                                    ).join('')
+                                    +`
+                                </tbody>
+                            </table>
+                        </div>
+                        <footer class="row center">
+                            <h5>Total</h5>
+                            <h5><b>R$ ${subtotal.toFixed(2).replace('.',',')}</b></h5>
+                            <!-- <template>${totalPayment+=subtotal}</template> -->
+                        </footer>
+                    </li>
+                </ul>
+            </div>`
+            : ``
+            ).join('')
+            +`
+        </div>
+        <footer class="row center white">
+            <h5><i>Total em ${payment}</i></h5>
+            <h4><b>R$ ${totalPayment.toFixed(2).replace('.',',')}</b></h4>
+            <!-- <template>${total+=totalPayment,totalPayment=0}</template> -->
+        </footer>
+    </li>
+    <br>`
+    ).join('')
+    +`
+</ul>
+<div class="card wrapper center">
+    <h5 class="row"><i>Total Geral</i></h5>
+    <h3>R$ ${total.toFixed(2).replace('.',',')}</h3>
+</div>`
+}
+<script src="/compras/scripts.js"></script>

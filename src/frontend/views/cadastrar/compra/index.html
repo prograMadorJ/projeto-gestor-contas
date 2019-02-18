@@ -1,0 +1,88 @@
+${
+`<ul class="collapsible">`+
+    consumers.map(consumer =>
+    `<li>
+        <div class="collapsible-header center">
+            <h4 class="row">${consumer.name.toUpperCase()}</h4>
+        </div>
+        <div class="collapsible-body">
+            <div class="row">
+                <form class="card wrapper" action="/cadastrar/compra" method="POST">
+                    <h5 class="center">Cadastrar Compra</h5>
+                    <input id="consumer" name="consumer" type="hidden" value="${consumer.name}">
+                    <div class="row">
+                        <div class="input-field">
+                            <input id="datetime" name="datetime" type="date" class="validate">
+                            <label for="datetime" class="grey-text text-darken-2">Data</label>
+                            <span class="helper-text" data-error="Digite uma data válida" data-success=""></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field">
+                            <input id="description" name="description" type="text" class="validate">
+                            <label for="description" class="grey-text text-darken-2">Descrição</label>
+                            <span class="helper-text" data-error="Digite uma descrição válida" data-success=""></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field">
+                            <select id="category" name="category">
+                                <option value="" disabled selected>Escolha uma categoria</option>
+                                ${
+                                (categories)?
+                                categories.map(category =>
+                                `<option value="${category.name}">${category.name.toUpperCase()}</option>
+                                `
+                                ):``}
+                            </select>
+                            <label class="grey-text text-darken-2">Categoria</label>
+                            ${
+                            (err)? `<span class="helper-text red-text">Erro ao obter categorias, tente recarregar a
+                                página</span>
+                            `
+                            : ``
+                            }
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field">
+                            <input id="quant" name="quant" type="number" class="validate">
+                            <label for="quant" class="grey-text text-darken-2">Quantidade (Und.)</label>
+                            <span class="helper-text" data-error="Digite uma quantidade válida" data-success=""></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field">
+                            <input id="value" name="value" type="text" class="validate">
+                            <label for="value" class="grey-text text-darken-2">Valor (R$)</label>
+                            <span class="helper-text" data-error="Digite um valor válido" data-success=""></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field">
+                            <select id="payment" name="payment">
+                                <option value="" disabled selected>Escolha um Pagamento</option>
+                                <option value="cartão de crédito - INTER">CARTÃO DE CRÉDITO - INTER</option>
+                                <option value="cartão de crédito - NUBANK">CARTÃO DE CRÉDITO - NUBANK</option>
+                                <option value="dinheiro">DINHEIRO</option>
+                            </select>
+                            <label class="grey-text text-darken-2">Pagamento</label>
+                        </div>
+                    </div>
+                    <div class="row center">
+                        <button class="btn" type="submit">SALVAR</button>
+                    </div>
+                </form>
+                <div id="result-msg" class="row card wrapper hide">
+                    <h5 id="text" class="center"></h5>
+                    <div class="row center wrapper">
+                        <a href="/cadastrar/compra" class="btn">OK</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>`
+    ).join('')
+    +`</ul>`
+}
+<script src="/cadastrar/compra/scripts.js"></script>

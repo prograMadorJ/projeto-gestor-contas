@@ -45,7 +45,7 @@ table.striped>tbody>tr:nth-child(odd) {
     }
 }
 
-.sidenav li.active {
+.sidenav li.active-opc {
     background-color: rgba(255, 255, 255, 0.5);
 }
 
@@ -53,7 +53,7 @@ table.striped>tbody>tr:nth-child(odd) {
     width: 15%;
 }
 
-#opc-menu > li {
+#opc-menu>li {
     position: relative;
 }
 
@@ -63,6 +63,7 @@ table.striped>tbody>tr:nth-child(odd) {
     top: 0;
     padding: 0 1rem;
     background-color: rgb(255, 221, 196);
+
     i {
         margin: 0 1rem;
     }
@@ -77,4 +78,29 @@ hr {
     border-bottom: 1px solid #4CAF50 !important;
     -webkit-box-shadow: 0 1px 0 0 #4CAF50 !important;
     box-shadow: 0 1px 0 0 #4CAF50 !important;
+}
+
+#purchases .collapsible-header,
+#purchases .collapsible-body {
+    border-bottom: 1px solid #727272;
+    padding: 1rem;
+}
+
+#purchases {
+
+    >div {
+        padding: 1rem 0;
+    }
+    footer {
+        padding: 1rem;
+    }
+    .collapsible-header {
+        h5.wrapper {
+            margin: 0;
+        }
+    }
+}
+
+input {
+    text-transform: uppercase
 }

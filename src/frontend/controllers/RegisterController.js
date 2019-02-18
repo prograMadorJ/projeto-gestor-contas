@@ -8,6 +8,8 @@ const orderBy = require('sort-by')
 
 const categoryController = require('../../api/controllers/CategoryController')
 const expenseController = require('../../api/controllers/ExpenseController')
+const purchaseController = require('../../api/controllers/PurchaseController')
+const consumerController = require('../../api/controllers/ConsumerController')
 
 module.exports = {
     /**
@@ -23,10 +25,16 @@ module.exports = {
 
             case 'GET':
 
-                return view('/cadastrar/categoria', {
-                    title: 'Categorias',
-                    activeOpc: 5
-                }, res, next)
+                return consumerController.api.fetch((err, consumers) => {
+
+                    view('/cadastrar/categoria', {
+                        title: 'Categorias',
+                        activeOpc: 5,
+                        consumers
+                    }, res, next)
+
+                })
+
 
 
             case 'POST':
@@ -52,17 +60,58 @@ module.exports = {
 
                     categories = categories.sort(orderBy('name'))
 
-                    view('/cadastrar/despesa', {
-                        title: 'Despesas',
-                        activeOpc: 4,
-                        categories,
-                        err
-                    }, res, next)
+                    consumerController.api.fetch((err, consumers) => {
+
+                        view('/cadastrar/despesa', {
+                            title: 'Despesas',
+                            activeOpc: 4,
+                            categories,
+                            consumers,
+                            err
+                        }, res, next)
+                    })
                 })
 
             case 'POST':
 
                 expenseController.register(req, res, next)
+        }
+
+    },
+    /**
+     * UI Purchase
+     * 
+     * @param {Request} req 
+     * @param {Response} res 
+     * @param {Callback} next 
+     */
+    UIPurchase(req, res, next) {
+
+        switch (req.method) {
+
+            case 'GET':
+
+                return consumerController.api.fetch((err, consumers) => {
+
+                    if (err) return next(new Error(err))
+
+                    categoryController.api.fetch((err, categories) => {
+
+                        categories = categories.sort(orderBy('name'))
+
+                        view('/cadastrar/compra', {
+                            title: 'Compras',
+                            activeOpc: 3,
+                            categories,
+                            consumers,
+                            err
+                        }, res, next)
+                    })
+                })
+
+            case 'POST':
+
+                purchaseController.register(req, res, next)
         }
 
     }

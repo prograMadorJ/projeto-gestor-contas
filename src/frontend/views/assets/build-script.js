@@ -8,7 +8,9 @@ const entries = {
     index: ['/scripts.js', './js/scripts.js'],
     header: ['/header/scripts.js', './header/scripts.js'],
     register_category: ['/cadastrar/categoria/scripts.js', './cadastrar/categoria/scripts.js'],
-    register_expense: ['/cadastrar/despesa/scripts.js', './cadastrar/despesa/scripts.js']
+    register_expense: ['/cadastrar/despesa/scripts.js', './cadastrar/despesa/scripts.js'],
+    purchases: ['/compras/scripts.js', './compras/scripts.js'],
+    register_purchase: ['/cadastrar/compra/scripts.js', './cadastrar/compra/scripts.js'],
 
 }
 

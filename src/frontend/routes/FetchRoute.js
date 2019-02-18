@@ -4,5 +4,6 @@ const Base = require('../routes/BaseRoute')
 module.exports = Base([
     ['GET','/',controller.UIHome],
     ['GET', '/categorias', controller.UICategories],
-    ['GET', '/despesas', controller.UIExpenses]
+    ['GET', '/despesas', controller.UIExpenses],
+    ['GET', '/compras', controller.UIPurchases]
 ])

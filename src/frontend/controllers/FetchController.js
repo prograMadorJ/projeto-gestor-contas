@@ -9,6 +9,8 @@ const groupBy = require('group-by')
 
 const categoryController = require('../../api/controllers/CategoryController')
 const expenseController = require('../../api/controllers/ExpenseController')
+const purchaseController = require('../../api/controllers/PurchaseController')
+const consumerController = require('../../api/controllers/ConsumerController')
 
 module.exports = {
     /**
@@ -19,10 +21,15 @@ module.exports = {
      * @param {Callback} next 
      */
     UIHome(req, res, next) {
-        view('/home', {
-            title: 'Home',
-            activeOpc: 1
-        }, res, next)
+
+        consumerController.api.fetch((err, consumers) => {
+            view('/home', {
+                title: 'Home',
+                activeOpc: 1,
+                consumers
+            }, res, next)
+        })
+
     },
     /**
      * UI Categories
@@ -37,12 +44,16 @@ module.exports = {
 
             categories = categories.sort(orderBy('name'))
 
-            view('/categorias', {
-                title: 'Categorias',
-                activeOpc: 5,
-                categories,
-                err
-            }, res, next)
+            consumerController.api.fetch((err, consumers) => {
+
+                view('/categorias', {
+                    title: 'Categorias',
+                    activeOpc: 5,
+                    categories,
+                    consumers,
+                    err
+                }, res, next)
+            })
         })
     },
     /**
@@ -58,14 +69,64 @@ module.exports = {
 
             expenses = expenses.sort(orderBy('-expiry'))
 
-            expenses = groupBy(expenses,'category.name')
+            expenses = groupBy(expenses, 'category.name')
 
-            view('/despesas', {
-                title: 'Despesas',
-                activeOpc: 4,
-                expenses,
-                err
-            }, res, next)
+            consumerController.api.fetch((err, consumers) => {
+                view('/despesas', {
+                    title: 'Despesas',
+                    activeOpc: 4,
+                    expenses,
+                    consumers,
+                    err
+                }, res, next)
+            })
+        })
+    },
+    /**
+     * UI Purchases
+     * 
+     * @param {Request} req 
+     * @param {Response} res 
+     * @param {Callback} next 
+     */
+    UIPurchases(req, res, next) {
+
+        const selectConsumer = req.query.consumer || 'TODOS'
+
+        purchaseController.api.get(req.query, (err, purchase) => {
+
+            if (err) return next(new Error(err))
+
+            purchases = purchase.sort(orderBy('-datetime'))
+
+            categories = groupBy(purchases, (purchase) =>
+                purchase.category ? purchase.category.name : 'null'
+            )
+
+            payments = Object.keys(groupBy(purchase, 'payment'))
+
+            purchases = {}
+
+            Object.keys(categories).map(category => {
+
+                group = groupBy(categories[category], 'payment')
+                purchases[category] = group
+            })
+
+            // return res.send(payments)
+
+            consumerController.api.fetch((err, consumers) => {
+
+                view('/compras', {
+                    title: 'Compras',
+                    activeOpc: 3,
+                    purchases,
+                    payments,
+                    consumers,
+                    selectConsumer,
+                    err
+                }, res, next)
+            })
         })
     }
 }
