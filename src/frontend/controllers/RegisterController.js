@@ -7,6 +7,7 @@ const {
 const orderBy = require('sort-by')
 
 const categoryController = require('../../api/controllers/CategoryController')
+const categoryRule = require('../../api/rules/CategoryRule')
 const expenseController = require('../../api/controllers/ExpenseController')
 const purchaseController = require('../../api/controllers/PurchaseController')
 const consumerController = require('../../api/controllers/ConsumerController')
@@ -30,9 +31,9 @@ module.exports = {
                     view('/cadastrar/categoria', {
                         title: 'Categorias',
                         activeOpc: 5,
-                        consumers
+                        consumers,
+                        regex: categoryRule.regex
                     }, res, next)
-
                 })
 
 

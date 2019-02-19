@@ -3,7 +3,7 @@
         <h5 class="center">Cadastrar Categoria</h5>
         <div class="row">
             <div class="input-field">
-                <input id="name" name="name" type="text" class="validate">
+                <input id="name" name="name" type="text" pattern="${regex.categoryName}" class="validate">
                 <label for="name">Nome</label>
                 <span class="helper-text" data-error="Digite um nome válido" data-success=""></span>
             </div>
