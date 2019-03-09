@@ -167,8 +167,11 @@ module.exports = (
         update(req, res, next) {
 
             callback = (validateOld, validateNew) => {
-                api(Model).update(validateOld, validateNew, err => {
-                    if (err) return next(new Error(err))
+                
+                if (validateOld == null || validateNew == null) return next(new Error('Updated invalid'))
+
+                api(Model).update(validateOld, validateNew, (err, doc) => {
+                    if (err || doc == null) return next(new Error(err))
                     res.status(202).send(messages.UPDATED_SUCCESS)
                 })
             }
@@ -185,8 +188,11 @@ module.exports = (
         delete(req, res, next) {
 
             callback = (validateDelete) => {
-                api(Model).delete(validateDelete, err => {
-                    if (err) return next(new Error(err))
+
+                if (validateDelete == null) return next(new Error('Deleted invalid'))
+
+                api(Model).delete(validateDelete, (err, doc) => {
+                    if (err || doc == null) return next(new Error(err))
                     res.status(202).send(messages.DELETED_SUCCESS)
                 })
             }
