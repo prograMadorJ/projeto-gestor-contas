@@ -3,21 +3,13 @@ const messages = require('../messages/CategoryMessages')
 const Base = require('./BaseController')
 const rules = require('../rules/CategoryRule')
 
-//TODO: implementation validators
-
 const validateRegister = rules.registerRule
 
-const validateUpdate = (req, callback) => {
-    callback(req.body.old, req.body.new)
-}
+const validateUpdate = rules.updateRule
 
-const validateDelete = (req, callback) => {
-    callback(req.body)
-}
+const validateDelete = rules.deleteRule
 
-const validateGet = (req, callback) => {
-    callback(req.query)
-}
+const validateGet = rules.deleteRule
 
 module.exports = Base(
     Category,
