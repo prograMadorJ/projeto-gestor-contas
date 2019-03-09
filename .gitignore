@@ -2,4 +2,7 @@ node_modules/
 *-lock.json
 */dump/
 *.ink.*
+src/api/tests/assets/
+src/api/tests/*.html
+src/api/tests/*.json
 
