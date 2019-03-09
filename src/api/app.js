@@ -2,19 +2,20 @@ const app = require('express')()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const helmet = require('helmet')
+const message = require('./messages/BaseMessages')
 require('./data/config').connect('contas')
 require('../frontend/app')(app)
 
 app.enabled('trust proxy')
 
 const serverErrorHandler = (err, req, res, next) => {
-    res.status(500).send('Algo de errado aconteceu, tente novamente')
+    res.status(500).send(message.SERVER_ERROR)
     console.log(err)
 
 }
 
 const clientErrorHandler = (req, res) => {
-    res.status(404).send('Recurso ou serviço não disponível no momento')
+    res.status(404).send(message.RESOURCE_NOT_FOUND)
 }
 
 
