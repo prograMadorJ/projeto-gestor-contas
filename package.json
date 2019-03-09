@@ -5,7 +5,7 @@
   "main": "./bin/server.js",
   "scripts": {
     "start": "nodemon bin/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --timeout 3000 ./src/api/tests --reporter mochawesome --reporter-options reportDir=./src/api/tests/,reportFilename=report",
     "dev": "NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=webpack.config.js",
     "watch": "NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=webpack.config.js",
     "hot": "NODE_ENV=development webpack-dev-server --inline --hot --config=webpack.config.js",
@@ -30,8 +30,12 @@
     "sort-by": "^1.2.0"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.1",
     "css-loader": "^2.1.0",
     "mini-css-extract-plugin": "^0.5.0",
+    "mocha": "^6.0.2",
+    "mochawesome": "^3.1.1",
     "node-sass": "^4.11.0",
     "sass-loader": "^7.1.0",
     "webpack": "^4.29.3",
