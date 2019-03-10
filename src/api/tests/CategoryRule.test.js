@@ -43,12 +43,12 @@ httpRequestDeleteTest = (route, json, expectStatusCode, expectMessage, callbackD
     send(http.request(app).delete(route), route, json, expectStatusCode, expectMessage, callbackDone, callback)
 }
 
-httpRequestGetTest = (route, json, expectStatusCode, callbackDone, callback) => {
-    http.request(app).get(route).send(json).end((err, res) => {
+httpRequestGetTest = (route, expectStatusCode, callbackDone, callback) => {
+    http.request(app).get(route).send().end((err, res) => {
         expect(err).be.null
         expect(res).status(expectStatusCode)
         if (typeof callback == 'function') callback(res)
-        prettyLog(route, json, res.text)
+        prettyLog(route, '', res.text)
         callbackDone()
     })
 }
@@ -162,16 +162,30 @@ describe('Atualizar Categoria', () => {
     })
 })
 
-describe('Buscar Categoria', () => {
+describe('Buscar Categorias', () => {
+
+    it('Caso Teste: Categorias Encontradas', done => {
+
+        httpRequestGetTest('/api/category', 200, done)
+    })
 
     it('Caso Teste: Categoria Encontrada', done => {
 
-        httpRequestGetTest('/api/category', {
-            name: 'categorias'
-        }, 200, done)
+        httpRequestGetTest('/api/category/get?name=categorias', 200, done)
+    })
+
+    it('Caso Teste: Categoria Não Encontrada', done => {
+
+        httpRequestGetTest('/api/category/get?name=categori', 200, done)
+    })
+
+    it('Caso Teste: Categoria com Parâmetro Incorreto', done => {
+
+        httpRequestGetTest('/api/category/get?description=categorias', 500, done)
     })
 
 })
+
 
 describe('Deletar Categoria', () => {
 
