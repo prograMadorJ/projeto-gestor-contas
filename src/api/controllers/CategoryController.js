@@ -9,7 +9,7 @@ const validateUpdate = rules.updateRule
 
 const validateDelete = rules.deleteRule
 
-const validateGet = rules.deleteRule
+const validateGet = rules.getRule
 
 module.exports = Base(
     Category,
