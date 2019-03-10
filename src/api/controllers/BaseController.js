@@ -1,3 +1,5 @@
+const baseMessages = require('../messages/BaseMessages')
+
 const api = (Model) => {
     return {
         /**
@@ -111,9 +113,9 @@ module.exports = (
          */
         register(req, res, next) {
 
-            callback = (validate) => {
+            callback = (registerFields) => {
 
-                const registerFields = validate
+                if(registerFields == null) return next(new Error(baseMessages.REGISTER_INVALID))
 
                 api(Model).register(registerFields, err => {
                     if (err) return next(new Error(err))
@@ -147,10 +149,14 @@ module.exports = (
         get(req, res, next) {
 
             callback = (getFilter) => {
+
+                if(getFilter == null) return next(new Error(baseMessages.GET_INVALID))
+
                 api(Model).get(getFilter, {
-                    _id: 0
+                    _id: 0,
+                    __v:0
                 }, (err, doc) => {
-                    if (err) return next(new Error(err))
+                    if (err || doc == null) return next(new Error(err))
                     res.send(doc)
                 })
             }
@@ -168,7 +174,7 @@ module.exports = (
 
             callback = (validateOld, validateNew) => {
                 
-                if (validateOld == null || validateNew == null) return next(new Error('Updated invalid'))
+                if (validateOld == null || validateNew == null) return next(new Error(baseMessages.UPDATE_INVALID))
 
                 api(Model).update(validateOld, validateNew, (err, doc) => {
                     if (err || doc == null) return next(new Error(err))
@@ -189,7 +195,7 @@ module.exports = (
 
             callback = (validateDelete) => {
 
-                if (validateDelete == null) return next(new Error('Deleted invalid'))
+                if (validateDelete == null) return next(new Error(baseMessages.DELETE_INVALID))
 
                 api(Model).delete(validateDelete, (err, doc) => {
                     if (err || doc == null) return next(new Error(err))
