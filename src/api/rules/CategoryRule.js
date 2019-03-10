@@ -108,7 +108,27 @@ const deleteRule = registerRule
  * @param {Request} req 
  * @param {Function} callback 
  */
-const getRule = registerRule
+const getRule = (req, callback) => {
+
+    validateRequest(['name'], req.query)
+        .then(() => {
+
+            test = validateTest(req.query.name.trim().match(regex.categoryName))
+
+            if (test)
+                callback(req.query)
+            else {
+                console.log(new Error(messages.FIELD_NAME_NO_MATCH))
+                callback(null)
+            }
+        })
+        .catch(() => {
+
+            console.log(new Error(messages.MISSING_FIELDS_OR_TOO_MANY_PARAM));
+            callback(null)
+
+        })
+}
 
 module.exports = {
     regex,
