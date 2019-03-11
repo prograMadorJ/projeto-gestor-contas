@@ -1,25 +1,18 @@
 const Expense = require('../models/Expense')
 const Category = require('../models/Category')
 const messages = require('../messages/ExpenseMessages')
+const baseMessages = require('../messages/BaseMessages')
 const Base = require('./BaseController')
+const rules = require('../rules/ExpenseRule')
 
-//TODO: implementation validators
 
-const validateRegister = (req, callback) => {
-    callback(req.body)
-}
+const validateRegister = rules.registerRule
 
-const validateUpdate = (req, callback) => {
-    callback(req.body.old, req.body.new)
-}
+const validateUpdate = rules.updateRule
 
-const validateDelete = (req, callback) => {
-    callback(req.body)
-}
+const validateDelete = rules.deleteRule
 
-const validateGet = (req, callback) => {
-    callback(req.query)
-}
+const validateGet = rules.getRule
 
 const api = (Model) => {
 
@@ -213,6 +206,9 @@ module.exports = {
     register(req, res, next) {
 
         callback = (registerFields) => {
+
+            if(registerFields == null) return next(new Error(baseMessages.REGISTER_INVALID))
+
             api(Expense).register(registerFields, err => {
                 if (err) return next(new Error(err))
                 res.status(201).send(messages.REGISTERED_SUCCESS)
@@ -244,8 +240,11 @@ module.exports = {
     get(req, res, next) {
 
         callback = (getFilter) => {
+
+            if(getFilter == null) return next(new Error(baseMessages.GET_INVALID))
+
             api(Expense).get(getFilter, (err, doc) => {
-                if (err) return next(new Error(err))
+                if (err) return res.status(404).send(messages.REGISTER_NOT_FOUND)
                 res.send(doc)
             })
         }
@@ -262,6 +261,9 @@ module.exports = {
     update(req, res, next) {
 
         callback = (validateOld, validateNew) => {
+
+            if(validateOld == null || validateNew == null) return next(new Error(baseMessages.UPDATE_INVALID))
+
             api(Expense).update(validateOld, validateNew, (err, doc) => {
                 if (err || doc == null) return next(new Error(err))
                 res.status(202).send(messages.UPDATED_SUCCESS)
@@ -279,7 +281,10 @@ module.exports = {
      */
     delete(req, res, next) {
 
-        callback = (validateDelete) => {
+        callback = (validateDelete) => {    
+
+            if(validateDelete == null) return next(new Error(baseMessages.DELETE_INVALID))
+
             api(Expense).delete(validateDelete, (err, doc) => {
                 if (err || doc == null) return next(new Error(err))
                 res.status(202).send(messages.DELETED_SUCCESS)
