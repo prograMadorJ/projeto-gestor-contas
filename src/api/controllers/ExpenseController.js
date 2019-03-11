@@ -241,10 +241,13 @@ module.exports = {
 
         callback = (getFilter) => {
 
-            if(getFilter == null) return next(new Error(baseMessages.GET_INVALID))
+            if (getFilter == null) return next(new Error(baseMessages.GET_INVALID))
 
             api(Expense).get(getFilter, (err, doc) => {
-                if (err) return res.status(404).send(messages.REGISTER_NOT_FOUND)
+                if (err || doc == '') {
+                    console.log(new Error(err))
+                    return res.status(404).send(messages.REGISTER_NOT_FOUND)
+                }
                 res.send(doc)
             })
         }
