@@ -154,9 +154,11 @@ module.exports = (
 
                 api(Model).get(getFilter, {
                     _id: 0,
-                    __v:0
+                    __v: 0
                 }, (err, doc) => {
-                    if (err || doc == null) return next(new Error(err))
+                    if (err || doc == null) {
+                        return next(new Error(err))
+                    } else if (doc.length == 0) return res.status(404).send(messages.REGISTER_NOT_FOUND)
                     res.send(doc)
                 })
             }
