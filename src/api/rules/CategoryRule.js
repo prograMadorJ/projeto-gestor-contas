@@ -1,27 +1,7 @@
-const validateRequest = (fields, object) => {
-
-    return new Promise((resolve, reject) => {
-
-        let result = true
-
-        async function search() {
-
-            await Object.keys(object).map(field => {
-
-                if (!fields.includes(field))
-                    return result = false
-            })
-        }
-
-        search()
-
-        if (result) resolve()
-        else reject()
-    })
-
-}
-
-const validateTest = test => (test != null && test[0] == test.input)
+const {
+    validateRequest,
+    validateTest
+} = require('./BaseRule')
 
 const regex = {
     categoryName: '^[A-zÀ-ú]+$|[A-zÀ-ú]+?(\\s&\\s[A-zÀ-ú]+|\\s\\([A-zÀ-ú]+\\))$'
