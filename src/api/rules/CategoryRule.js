@@ -32,8 +32,9 @@ const registerRule = (req, callback) => {
                 callback(null)
             }
         })
-        .catch(() => {
+        .catch((err) => {
 
+            if (err) return console.log(err)
             console.log(new Error(messages.MISSING_FIELDS_OR_TOO_MANY_PARAM));
             callback(null)
 
@@ -48,7 +49,8 @@ const registerRule = (req, callback) => {
  */
 const updateRule = (req, callback) => {
 
-    const error = () => {
+    const error = (err) => {
+        if (err) return console.log(err)
         console.log(new Error(messages.MISSING_FIELDS_OR_TOO_MANY_PARAM));
         callback(null,null)
     }
@@ -102,8 +104,9 @@ const getRule = (req, callback) => {
                 callback(null)
             }
         })
-        .catch(() => {
+        .catch((err) => {
 
+            if (err) return console.log(err)
             console.log(new Error(messages.MISSING_FIELDS_OR_TOO_MANY_PARAM));
             callback(null)
 
